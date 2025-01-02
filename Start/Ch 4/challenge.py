@@ -4,32 +4,47 @@
 # Challenge: convert your classes to dataclasses
 # The subclasses are required to override the magic method
 # that makes them sortable
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
 
-class Asset():
-    pass
-    
+@dataclass
+class Asset(ABC):
+    price: float
 
+    @abstractmethod
+    def __lt__(self):
+        pass
+
+@dataclass
 class Stock(Asset):
-    pass
+    ticker: str
+    company: str
 
+    def __lt__(self, other):
+        return self.price < other.price
 
+@dataclass
 class Bond(Asset):
-    pass
+    description: str
+    duration: int
+    yieldamt: float
 
+    def __lt__(self, other):
+        return self.yieldamt < other.yieldamt
+        
 # ~~~~~~~~~ TEST CODE ~~~~~~~~~
 stocks = [
-    Stock("MSFT", 342.0, "Microsoft Corp"),
-    Stock("GOOG", 135.0, "Google Inc"),
-    Stock("META", 275.0, "Meta Platforms Inc"),
-    Stock("AMZN", 120.0, "Amazon Inc")
+    Stock(ticker="MSFT", price=342.0, company="Microsoft Corp"),
+    Stock(ticker="GOOG", price=135.0, company="Google Inc"),
+    Stock(ticker="META", price=275.0, company="Meta Platforms Inc"),
+    Stock(ticker="AMZN", price=120.0, company="Amazon Inc")
 ]
 
 bonds = [
-    Bond(95.31, "30 Year US Treasury", 30, 4.38),
-    Bond(96.70, "10 Year US Treasury", 10, 4.28),
-    Bond(98.65, "5 Year US Treasury", 5, 4.43),
-    Bond(99.57, "2 Year US Treasury", 2, 4.98)
-]
+    Bond(price=95.31, description="30 Year US Treasury", duration=30, yieldamt=4.38),
+    Bond(price=96.70, description="10 Year US Treasury", duration=10, yieldamt=4.28),
+    Bond(price=98.65, description="5 Year US Treasury", duration=5, yieldamt=4.43),
+    Bond(price=99.57, description="2 Year US Treasury", duration=2, yieldamt=4.98)
 
 try:
    ast = Asset(100.0)
